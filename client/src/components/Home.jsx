@@ -6,10 +6,10 @@ import axios from "axios";
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
+  const [url, setUrl] = useState("");
   const [summary, setSummary] = useState("");
 
-  // API req
-  const options = {
+  const summaryApi = {
     method: "POST",
     url: "https://gpt-summarization.p.rapidapi.com/summarize",
     headers: {
@@ -23,10 +23,39 @@ const Home = () => {
     },
   };
 
+  const webScrappingApi = {
+    method: "GET",
+    url: "https://article-extractor-and-summarizer.p.rapidapi.com/extract",
+    params: {
+      url,
+    },
+    headers: {
+      "x-rapidapi-key": "cfaffe4735mshc81634fb8809ebap1c847djsn0a07ca086e4c",
+      "x-rapidapi-host": "article-extractor-and-summarizer.p.rapidapi.com",
+    },
+  };
+
+  const getScrappedText = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.request(webScrappingApi);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(response.data.content, "text/html");
+      const paragraphs = doc.querySelectorAll("p");
+      const texts = Array.from(paragraphs).map((p) => p.textContent);
+      const combinedText = texts.join(" ");
+      setText(combinedText);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
   const getSummary = async () => {
     try {
       setLoading(true);
-      const response = await axios.request(options);
+      const response = await axios.request(summaryApi);
       setSummary(response.data.summary);
       setLoading(false);
     } catch (error) {
@@ -40,9 +69,15 @@ const Home = () => {
       {loading && <p>Loading..</p>}
       <p className="font-medium">Summarize my text</p>
       <TextInput text={text} setText={setText} />
-      <UrlInput />
+      <UrlInput url={url} setUrl={setUrl} />
       <button
-        className="px-4 h-10 text-2xl uppercase bg-purple-500 border-2 border-purple-600 text-white font-bold rounded-sm"
+        className="px-4 h-10 text-2xl uppercase bg-purple-500 text-white font-bold rounded-sm"
+        onClick={getScrappedText}
+      >
+        Extract Text
+      </button>
+      <button
+        className="px-4 h-10 text-2xl uppercase bg-purple-500 text-white font-bold rounded-sm"
         onClick={getSummary}
       >
         Summarize

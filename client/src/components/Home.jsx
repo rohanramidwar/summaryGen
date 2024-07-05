@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextInput from "../components/TextInput";
 import UrlInput from "../components/UrlInput";
 import axios from "axios";
 import SentenceCountInput from "./SentenceCountInput";
 import { Button } from "./ui/button";
 import { useDispatch } from "react-redux";
-import { saveSmmry } from "@/actions/actions";
+import { getAllSmmries, saveSmmry } from "@/actions/actions";
+import { useLocation, useNavigate } from "react-router-dom";
+import ResultBox from "./ResultBox";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  //to get user id
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
 
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
   const [sentenceCount, setSentenceCount] = useState(3);
   const [url, setUrl] = useState("");
-  const [smmry, setSummary] = useState("");
+  const [summary, setSummary] = useState("");
+  const uid = user?._id;
 
   const summaryApi = {
     method: "POST",
@@ -52,6 +63,7 @@ const Home = () => {
       const texts = Array.from(paragraphs).map((p) => p.textContent);
       const combinedText = texts.join(" ");
       setText(combinedText);
+      setUrl("");
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -64,7 +76,8 @@ const Home = () => {
       setLoading(true);
       const response = await axios.request(summaryApi);
       setSummary(response.data.summary);
-      dispatch(saveSmmry({ smmry }));
+      const smmry = response.data.summary;
+      dispatch(saveSmmry({ uid, smmry }));
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -72,28 +85,57 @@ const Home = () => {
     }
   };
 
+  const getHistory = () => {
+    dispatch(getAllSmmries({ uid }));
+    navigate("/history");
+  };
+
   return (
     <div className="flex justify-center">
-      <div className="w-1/3 text-slate-900 flex flex-col gap-2 items-center">
-        {loading && <p>Loading..</p>}
-        <div className="flex gap-2 font-medium">
-          <p>Summarize my text in</p>
-          <SentenceCountInput
-            sentenceCount={sentenceCount}
-            setSentenceCount={setSentenceCount}
-          />
-          <p>sentences</p>
+      {!summary ? (
+        <ResultBox
+          summary={summary}
+          text={text}
+          setSummary={setSummary}
+          setText={setText}
+        />
+      ) : (
+        <div className="w-full px-3 sm:px-0 sm:w-1/3 text-slate-900 flex flex-col gap-2 items-center">
+          {loading && <p>Loading..</p>}
+          <div className="flex gap-2 font-medium">
+            <p>Summarize my text in</p>
+            <SentenceCountInput
+              sentenceCount={sentenceCount}
+              setSentenceCount={setSentenceCount}
+            />
+            <p>sentences</p>
+          </div>
+          <TextInput text={text} setText={setText} />
+          <div className="w-full">
+            <UrlInput url={url} setUrl={setUrl} />
+          </div>
+          <div className="flex justify-between w-full">
+            <Button className="h-9" onClick={getHistory}>
+              History
+            </Button>
+            {url ? (
+              <Button
+                className="bg-sky-500 hover:bg-sky-500"
+                onClick={getScrappedText}
+              >
+                Extract Text
+              </Button>
+            ) : (
+              <Button
+                className="bg-fuchsia-500 hover:bg-fuchsia-500"
+                onClick={getSummary}
+              >
+                Summarize
+              </Button>
+            )}
+          </div>
         </div>
-        <TextInput text={text} setText={setText} />
-        <div className="flex gap-2">
-          <UrlInput url={url} setUrl={setUrl} />
-          {url && <Button onClick={getScrappedText}>Extract Text</Button>}
-        </div>
-        <div className="flex gap-2">
-          <Button>History</Button>
-          <Button onClick={getSummary}>Summarize</Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

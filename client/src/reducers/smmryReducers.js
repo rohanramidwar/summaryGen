@@ -6,7 +6,6 @@
 import {
   END_LOADING,
   FETCH_ALL_SMMRIES,
-  SAVE_SMMRY,
   START_LOADING,
 } from "@/constants/actions";
 
@@ -24,9 +23,6 @@ const smmry = (state = initialState, action) => {
 
     case END_LOADING:
       return { ...state, isLoading: false };
-
-    case SAVE_SMMRY:
-      return { ...state, smmries: [payload, ...state.smmries] };
 
     case FETCH_ALL_SMMRIES:
       return {

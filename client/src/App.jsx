@@ -10,13 +10,15 @@ import "@fontsource/open-sans/700.css";
 import "@fontsource/open-sans/800.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import HistoryBox from "./components/HistoryBox";
 
 const App = () => {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route path="/" Component={Home} />{" "}
+        <Route path="/history" Component={HistoryBox} />
       </Routes>
       <Footer />
       <Toaster />

@@ -15,4 +15,4 @@ API.interceptors.request.use((req) => {
 });
 
 export const saveSmmry = (newSmmry) => API.post("/smmries", newSmmry); //sends data
-export const fetchAllSmmries = () => API.get("/smmries");
+export const fetchAllSmmries = (uid) => API.get(`/smmries/${uid}`);

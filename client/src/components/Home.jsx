@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import TextInput from "../components/TextInput";
 import UrlInput from "../components/UrlInput";
 import axios from "axios";
+import SentenceCountInput from "./SentenceCountInput";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
+  const [sentenceCount, setSentenceCount] = useState(3);
   const [url, setUrl] = useState("");
   const [summary, setSummary] = useState("");
 
@@ -19,7 +21,7 @@ const Home = () => {
     },
     data: {
       text,
-      num_sentences: 3,
+      num_sentences: sentenceCount,
     },
   };
 
@@ -65,9 +67,16 @@ const Home = () => {
   };
 
   return (
-    <div className="pt-2 text-slate-900 flex flex-col gap-2 items-center min-h-screen">
+    <div className="text-slate-900 flex flex-col gap-2 items-center min-h-screen">
       {loading && <p>Loading..</p>}
-      <p className="font-medium">Summarize my text</p>
+      <div className="flex gap-2 font-medium">
+        <p>Summarize my text in</p>
+        <SentenceCountInput
+          sentenceCount={sentenceCount}
+          setSentenceCount={setSentenceCount}
+        />
+        <p>sentences</p>
+      </div>
       <TextInput text={text} setText={setText} />
       <UrlInput url={url} setUrl={setUrl} />
       <button

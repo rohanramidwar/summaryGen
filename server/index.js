@@ -5,6 +5,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import admin from "./firebase.js";
 import UserModel from "./models/user.js";
+import smmryRoutes from "./routes/smmryRoutes.js";
 
 const app = express();
 //enable us to send post req
@@ -19,6 +20,8 @@ app.use(
   })
 ); //enables cross origin req
 app.use(express.json());
+
+app.use("/smmries", smmryRoutes);
 
 config(); //access to env
 const PORT = process.env.PORT || 5000;

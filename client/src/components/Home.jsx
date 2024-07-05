@@ -4,13 +4,17 @@ import UrlInput from "../components/UrlInput";
 import axios from "axios";
 import SentenceCountInput from "./SentenceCountInput";
 import { Button } from "./ui/button";
+import { useDispatch } from "react-redux";
+import { saveSmmry } from "@/actions/actions";
 
 const Home = () => {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
   const [sentenceCount, setSentenceCount] = useState(3);
   const [url, setUrl] = useState("");
-  const [summary, setSummary] = useState("");
+  const [smmry, setSummary] = useState("");
 
   const summaryApi = {
     method: "POST",
@@ -60,6 +64,7 @@ const Home = () => {
       setLoading(true);
       const response = await axios.request(summaryApi);
       setSummary(response.data.summary);
+      dispatch(saveSmmry({ smmry }));
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -80,9 +85,14 @@ const Home = () => {
           <p>sentences</p>
         </div>
         <TextInput text={text} setText={setText} />
-        <UrlInput url={url} setUrl={setUrl} />
-        <Button onClick={getScrappedText}>Extract Text</Button>
-        <Button onClick={getSummary}>Summarize</Button>
+        <div className="flex gap-2">
+          <UrlInput url={url} setUrl={setUrl} />
+          {url && <Button onClick={getScrappedText}>Extract Text</Button>}
+        </div>
+        <div className="flex gap-2">
+          <Button>History</Button>
+          <Button onClick={getSummary}>Summarize</Button>
+        </div>
       </div>
     </div>
   );

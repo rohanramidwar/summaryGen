@@ -54,7 +54,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="py-5 flex justify-center">
+    <div className="py-3 flex justify-center">
       <div>
         <ul className="flex gap-2 uppercase text-sm">
           <li>Summarize</li>|<li>About</li>|<li>API</li>|<li>Contact</li>|

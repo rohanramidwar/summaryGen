@@ -3,6 +3,7 @@ import TextInput from "../components/TextInput";
 import UrlInput from "../components/UrlInput";
 import axios from "axios";
 import SentenceCountInput from "./SentenceCountInput";
+import { Button } from "./ui/button";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -67,30 +68,22 @@ const Home = () => {
   };
 
   return (
-    <div className="text-slate-900 flex flex-col gap-2 items-center min-h-screen">
-      {loading && <p>Loading..</p>}
-      <div className="flex gap-2 font-medium">
-        <p>Summarize my text in</p>
-        <SentenceCountInput
-          sentenceCount={sentenceCount}
-          setSentenceCount={setSentenceCount}
-        />
-        <p>sentences</p>
+    <div className="flex justify-center">
+      <div className="w-1/3 text-slate-900 flex flex-col gap-2 items-center">
+        {loading && <p>Loading..</p>}
+        <div className="flex gap-2 font-medium">
+          <p>Summarize my text in</p>
+          <SentenceCountInput
+            sentenceCount={sentenceCount}
+            setSentenceCount={setSentenceCount}
+          />
+          <p>sentences</p>
+        </div>
+        <TextInput text={text} setText={setText} />
+        <UrlInput url={url} setUrl={setUrl} />
+        <Button onClick={getScrappedText}>Extract Text</Button>
+        <Button onClick={getSummary}>Summarize</Button>
       </div>
-      <TextInput text={text} setText={setText} />
-      <UrlInput url={url} setUrl={setUrl} />
-      <button
-        className="px-4 h-10 text-2xl uppercase bg-purple-500 text-white font-bold rounded-sm"
-        onClick={getScrappedText}
-      >
-        Extract Text
-      </button>
-      <button
-        className="px-4 h-10 text-2xl uppercase bg-purple-500 text-white font-bold rounded-sm"
-        onClick={getSummary}
-      >
-        Summarize
-      </button>
     </div>
   );
 };

@@ -31,13 +31,16 @@ const Footer = () => {
       console.log(result);
       const token = await result.user.getIdToken();
 
-      const response = await fetch("http://localhost:5000/api/protected", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
+      const response = await fetch(
+        "https://rohan-ai-powered-content-summarizer-backend.vercel.app/api/protected",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
 
       const userData = await response.json();
       setUser(userData);

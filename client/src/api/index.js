@@ -2,7 +2,7 @@ import axios from "axios"; //used to make api calls
 
 axios.defaults.withCredentials = true;
 const API = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://rohan-ai-powered-content-summarizer-backend.vercel.app",
 }); //points to backend routes
 
 API.interceptors.request.use((req) => {

@@ -11,7 +11,6 @@ export const saveSmmry = (newSmmry) => async (dispatch) => {
     dispatch({ type: START_LOADING });
     await api.saveSmmry(newSmmry);
     dispatch({ type: END_LOADING });
-    toast.success("Successfully summarised!");
   } catch (err) {
     console.log(err);
   }
@@ -26,6 +25,7 @@ export const getAllSmmries =
       dispatch({ type: FETCH_ALL_SMMRIES, payload: data }); //sends to reducer
       dispatch({ type: END_LOADING });
     } catch (err) {
+      toast.error("Failed to fetch history");
       console.log(err);
     }
   };

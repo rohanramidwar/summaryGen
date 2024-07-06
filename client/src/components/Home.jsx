@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { getAllSmmries, saveSmmry } from "@/actions/actions";
 import { useLocation, useNavigate } from "react-router-dom";
 import ResultBox from "./ResultBox";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const Home = () => {
       setLoading(false);
     } catch (error) {
       console.error(error);
+      toast.error("Invalid url");
       setLoading(false);
     }
   };
@@ -81,6 +83,7 @@ const Home = () => {
       setLoading(false);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to summarize");
       setLoading(false);
     }
   };
@@ -92,7 +95,7 @@ const Home = () => {
 
   return (
     <div className="flex justify-center">
-      {!summary ? (
+      {summary ? (
         <ResultBox
           summary={summary}
           text={text}
@@ -123,14 +126,14 @@ const Home = () => {
                 className="bg-sky-500 hover:bg-sky-500"
                 onClick={getScrappedText}
               >
-                Extract Text
+                {loading ? "Extracting.." : "Extract Text"}
               </Button>
             ) : (
               <Button
                 className="bg-fuchsia-500 hover:bg-fuchsia-500"
                 onClick={getSummary}
               >
-                Summarize
+                {loading ? "Summarizing.." : "Summarize"}
               </Button>
             )}
           </div>

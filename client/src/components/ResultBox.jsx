@@ -1,11 +1,22 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Copy } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ResultBox = ({ text, summary, setSummary, setText }) => {
   const newSummary = () => {
     setSummary("");
     setText("");
+  };
+
+  const copyContent = async () => {
+    try {
+      await navigator.clipboard.writeText(summary);
+      toast.success("Copied!");
+    } catch (err) {
+      toast.error("Failed to copy");
+      console.error("Failed to copy: ", err);
+    }
   };
 
   return (
@@ -21,7 +32,7 @@ const ResultBox = ({ text, summary, setSummary, setText }) => {
             <p>{summary}</p>
           </div>
           <div className="flex justify-end">
-            <button>
+            <button onClick={copyContent}>
               <Copy />
             </button>
           </div>

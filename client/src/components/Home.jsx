@@ -74,17 +74,21 @@ const Home = () => {
   };
 
   const getSummary = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.request(summaryApi);
-      setSummary(response.data.summary);
-      const smmry = response.data.summary;
-      dispatch(saveSmmry({ uid, smmry }));
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to summarize");
-      setLoading(false);
+    if (text) {
+      try {
+        setLoading(true);
+        const response = await axios.request(summaryApi);
+        setSummary(response.data.summary);
+        const smmry = response.data.summary;
+        dispatch(saveSmmry({ uid, smmry }));
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to summarize");
+        setLoading(false);
+      }
+    } else {
+      toast.error("Add text to summarize");
     }
   };
 
@@ -104,7 +108,11 @@ const Home = () => {
         />
       ) : (
         <div className="w-full px-3 sm:px-0 sm:w-1/3 text-slate-900 flex flex-col gap-2 items-center">
-          {loading && <p>Loading..</p>}
+          {loading && (
+            <p className="animate-pulse">
+              {url ? "Extracting.." : "Summarizing.."}
+            </p>
+          )}
           <div className="flex gap-2 font-medium">
             <p>Summarize my text in</p>
             <SentenceCountInput
@@ -117,20 +125,34 @@ const Home = () => {
           <div className="w-full">
             <UrlInput url={url} setUrl={setUrl} />
           </div>
-          <div className="flex justify-between w-full">
-            <Button className="h-9" onClick={getHistory}>
-              History
-            </Button>
+          <div
+            className={`flex ${
+              user ? "justify-between" : "justify-end"
+            } w-full`}
+          >
+            {user && (
+              <Button className="h-9" onClick={getHistory}>
+                History
+              </Button>
+            )}
             {url ? (
               <Button
-                className="bg-sky-500 hover:bg-sky-500"
+                className={`${
+                  loading
+                    ? "bg-sky-300 hover:bg-sky-300"
+                    : "bg-sky-500 hover:bg-sky-500"
+                }`}
                 onClick={getScrappedText}
               >
                 {loading ? "Extracting.." : "Extract Text"}
               </Button>
             ) : (
               <Button
-                className="bg-fuchsia-500 hover:bg-fuchsia-500"
+                className={`${
+                  loading
+                    ? "bg-fuchsia-300 hover:bg-fuchsia-300"
+                    : "bg-fuchsia-500 hover:bg-fuchsia-500"
+                }`}
                 onClick={getSummary}
               >
                 {loading ? "Summarizing.." : "Summarize"}

@@ -62,7 +62,11 @@ const Footer = () => {
         <ul className="flex gap-2 uppercase text-sm">
           <li>Summarize</li>|<li>About</li>|<li>API</li>|<li>Contact</li>|
           {user ? (
-            <li role="button" onClick={handleGoogleSignOut}>
+            <li
+              className="text-blue-500"
+              role="button"
+              onClick={handleGoogleSignOut}
+            >
               Sign Out
             </li>
           ) : (

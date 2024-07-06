@@ -12,7 +12,7 @@ const HistoryBox = () => {
     <div className="flex flex-col gap-3 items-center text-slate-900">
       <p className="font-medium uppercase">History</p>
       {isLoading ? (
-        <div>Loading..</div>
+        <div className="animate-pulse">Loading..</div>
       ) : (
         <div className="px-3 sm:px-0 sm:w-1/3 flex flex-col gap-3">
           {!smmries.length && <p className="text-center">No history found!</p>}

@@ -125,16 +125,11 @@ const Home = () => {
           <div className="w-full">
             <UrlInput url={url} setUrl={setUrl} />
           </div>
-          <div
-            className={`flex ${
-              user ? "justify-between" : "justify-end"
-            } w-full`}
-          >
-            {user && (
-              <Button className="h-9" onClick={getHistory}>
-                History
-              </Button>
-            )}
+          <div className="flex justify-between w-full">
+            <Button className="h-9" onClick={getHistory}>
+              History
+            </Button>
+
             {url ? (
               <Button
                 className={`${
